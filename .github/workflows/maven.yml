@@ -1,0 +1,51 @@
+name: CI - Build e Testes
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    services:
+      mongodb:
+        image: mongo:7
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd="mongosh --eval 'db.runCommand({ ping: 1 })'"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    env:
+      MONGODB_HOST: localhost
+      MONGODB_PORT: 27017
+      JWT_SECRET: ${{ secrets.JWT_SECRET }}
+
+    steps:
+
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+          cache: maven
+
+      - name: Esperar MongoDB iniciar
+        run: |
+          for i in {1..10}; do
+            mongosh --host localhost --eval "db.runCommand({ ping: 1 })" && break
+            echo "Esperando MongoDB..."
+            sleep 2
+          done
+
+      - name: Build e testes com Maven
+        run: mvn -B clean verify
