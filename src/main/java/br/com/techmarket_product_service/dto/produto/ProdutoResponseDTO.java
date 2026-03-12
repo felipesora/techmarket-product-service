@@ -3,6 +3,7 @@ package br.com.techmarket_product_service.dto.produto;
 import br.com.techmarket_product_service.model.enums.CategoriaProduto;
 import br.com.techmarket_product_service.model.enums.StatusProduto;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public record ProdutoResponseDTO(
@@ -12,7 +13,7 @@ public record ProdutoResponseDTO(
         String descricao,
         CategoriaProduto categoria,
         String marca,
-        Double preco,
+        BigDecimal preco,
         Integer estoque,
         StatusProduto status,
         LocalDateTime dataCriacao

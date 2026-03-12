@@ -4,6 +4,8 @@ import br.com.techmarket_product_service.model.enums.CategoriaProduto;
 import br.com.techmarket_product_service.model.enums.StatusProduto;
 import jakarta.validation.constraints.*;
 
+import java.math.BigDecimal;
+
 public record ProdutoUpdateDTO (
         @NotBlank(message = "O código do produto é obrigatório")
         @Size(min = 3, max = 50, message = "O código deve ter entre 3 e 50 caracteres")
@@ -24,7 +26,7 @@ public record ProdutoUpdateDTO (
 
         @NotNull(message = "O preço é obrigatório")
         @Positive(message = "O preço deve ser maior que zero")
-        Double preco,
+        BigDecimal preco,
 
         @NotNull(message = "O estoque é obrigatório")
         @PositiveOrZero(message = "O estoque não pode ser negativo")
