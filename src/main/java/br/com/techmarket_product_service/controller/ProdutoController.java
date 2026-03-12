@@ -1,7 +1,8 @@
 package br.com.techmarket_product_service.controller;
 
-import br.com.techmarket_product_service.dto.produto.ProdutoRequestDTO;
+import br.com.techmarket_product_service.dto.produto.ProdutoCreateDTO;
 import br.com.techmarket_product_service.dto.produto.ProdutoResponseDTO;
+import br.com.techmarket_product_service.dto.produto.ProdutoUpdateDTO;
 import br.com.techmarket_product_service.service.ProdutoService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -37,14 +38,14 @@ public class ProdutoController {
     }
 
     @PostMapping
-    public ResponseEntity<ProdutoResponseDTO> cadastrarUsuario(@RequestBody @Valid ProdutoRequestDTO dto, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<ProdutoResponseDTO> cadastrarUsuario(@RequestBody @Valid ProdutoCreateDTO dto, UriComponentsBuilder uriBuilder) {
         ProdutoResponseDTO produto = produtoService.cadastrarProduto(dto);
         URI endereco = uriBuilder.path("/produtos/{id}").buildAndExpand(produto.id()).toUri();
         return ResponseEntity.created(endereco).body(produto);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProdutoResponseDTO> atualizar(@PathVariable @NotNull String id, @RequestBody @Valid ProdutoRequestDTO dto) {
+    public ResponseEntity<ProdutoResponseDTO> atualizar(@PathVariable @NotNull String id, @RequestBody @Valid ProdutoUpdateDTO dto) {
         ProdutoResponseDTO atualizado = produtoService.atualizarProduto(id, dto);
         return ResponseEntity.ok(atualizado);
     }
