@@ -1,5 +1,7 @@
 package br.com.techmarket_product_service.config;
 
+import br.com.techmarket_product_service.exception.CustomAccessDeniedHandler;
+import br.com.techmarket_product_service.exception.CustomAuthenticationEntryPoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -20,9 +22,13 @@ import java.util.List;
 public class SecurityConfiguration {
 
     private final SecurityFilter securityFilter;
+    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
-    public SecurityConfiguration(SecurityFilter securityFilter) {
+    public SecurityConfiguration(SecurityFilter securityFilter, CustomAuthenticationEntryPoint customAuthenticationEntryPoint, CustomAccessDeniedHandler customAccessDeniedHandler) {
         this.securityFilter = securityFilter;
+        this.customAuthenticationEntryPoint = customAuthenticationEntryPoint;
+        this.customAccessDeniedHandler = customAccessDeniedHandler;
     }
 
     @Bean
@@ -31,9 +37,9 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-//                .exceptionHandling(exception -> exception
-//                        .authenticationEntryPoint(customAuthenticationEntryPoint)
-//                        .accessDeniedHandler(customAccessDeniedHandler))
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint(customAuthenticationEntryPoint)
+                        .accessDeniedHandler(customAccessDeniedHandler))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/produtos").hasRole("ADMINISTRADOR")
                         .requestMatchers(HttpMethod.PUT, "/produtos/**").hasRole("ADMINISTRADOR")
