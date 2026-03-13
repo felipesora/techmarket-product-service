@@ -1,8 +1,11 @@
 package br.com.techmarket_product_service.controller;
 
+import br.com.techmarket_product_service.config.SecurityFilter;
 import br.com.techmarket_product_service.dto.produto.ProdutoCreateDTO;
 import br.com.techmarket_product_service.dto.produto.ProdutoResponseDTO;
 import br.com.techmarket_product_service.dto.produto.ProdutoUpdateDTO;
+import br.com.techmarket_product_service.exception.CustomAccessDeniedHandler;
+import br.com.techmarket_product_service.exception.CustomAuthenticationEntryPoint;
 import br.com.techmarket_product_service.exception.EntityNotFoundException;
 import br.com.techmarket_product_service.model.enums.CategoriaProduto;
 import br.com.techmarket_product_service.model.enums.StatusProduto;
@@ -13,6 +16,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -36,6 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(ProdutoController.class)
+@AutoConfigureMockMvc(addFilters = false)
 class ProdutoControllerTest {
 
     @Autowired
@@ -46,6 +51,15 @@ class ProdutoControllerTest {
 
     @MockitoBean
     private ProdutoService produtoService;
+
+    @MockitoBean
+    private SecurityFilter securityFilter;
+
+    @MockitoBean
+    private CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+
+    @MockitoBean
+    private CustomAccessDeniedHandler customAccessDeniedHandler;
 
     private ProdutoResponseDTO produtoResponseDTO;
     private ProdutoCreateDTO produtoCreateDTO;
