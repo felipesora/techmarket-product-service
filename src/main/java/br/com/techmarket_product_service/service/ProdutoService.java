@@ -72,9 +72,10 @@ public class ProdutoService {
     }
 
     @Transactional
-    public void deletarProduto(String id) {
+    public ProdutoResponseDTO deletarProduto(String id) {
         var produto = buscarEntidadeProdutoPorId(id);
         produtoRepository.delete(produto);
+        return converterParaResponseDTO(produto);
     }
 
     private Produto buscarEntidadeProdutoPorId(String id) {

@@ -67,7 +67,12 @@ public class ProdutoController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ProdutoResponseDTO> remover(@PathVariable @NotNull String id) {
-        produtoService.deletarProduto(id);
+        ProdutoResponseDTO deletado = produtoService.deletarProduto(id);
+
+        ProdutoSnapshotDTO produtoSnapshotDTO = converterParaProdutoSnapshot(deletado);
+        System.out.println("Enviando produto removido: " + produtoSnapshotDTO);
+        rabbitTemplate.convertAndSend("produto.exchange", "produto.removido", produtoSnapshotDTO);
+
         return ResponseEntity.noContent().build();
     }
 
