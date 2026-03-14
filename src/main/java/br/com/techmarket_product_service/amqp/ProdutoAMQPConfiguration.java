@@ -1,6 +1,7 @@
 package br.com.techmarket_product_service.amqp;
 
 import org.springframework.amqp.core.FanoutExchange;
+import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -37,7 +38,7 @@ public class ProdutoAMQPConfiguration {
     }
 
     @Bean
-    public FanoutExchange fanoutExchange() {
-        return new FanoutExchange("produto.exchange");
+    public TopicExchange topicExchange() {
+        return new TopicExchange("produto.exchange");
     }
 }

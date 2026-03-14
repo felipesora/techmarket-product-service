@@ -48,8 +48,8 @@ public class ProdutoController {
         URI endereco = uriBuilder.path("/produtos/{id}").buildAndExpand(produto.id()).toUri();
 
         ProdutoSnapshotDTO produtoSnapshotDTO = converterParaProdutoSnapshot(produto);
-        System.out.println("Enviando produto: " + produtoSnapshotDTO);
-        rabbitTemplate.convertAndSend("produto.exchange", "", produtoSnapshotDTO);
+        System.out.println("Enviando produto cadastrado: " + produtoSnapshotDTO);
+        rabbitTemplate.convertAndSend("produto.exchange", "produto.criado", produtoSnapshotDTO);
 
         return ResponseEntity.created(endereco).body(produto);
     }
@@ -57,6 +57,11 @@ public class ProdutoController {
     @PutMapping("/{id}")
     public ResponseEntity<ProdutoResponseDTO> atualizar(@PathVariable @NotNull String id, @RequestBody @Valid ProdutoUpdateDTO dto) {
         ProdutoResponseDTO atualizado = produtoService.atualizarProduto(id, dto);
+
+        ProdutoSnapshotDTO produtoSnapshotDTO = converterParaProdutoSnapshot(atualizado);
+        System.out.println("Enviando produto atualizado: " + produtoSnapshotDTO);
+        rabbitTemplate.convertAndSend("produto.exchange", "produto.atualizado", produtoSnapshotDTO);
+
         return ResponseEntity.ok(atualizado);
     }
 
