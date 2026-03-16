@@ -15,6 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -54,6 +55,9 @@ class ProdutoControllerTest {
 
     @MockitoBean
     private SecurityFilter securityFilter;
+
+    @MockitoBean
+    private RabbitTemplate rabbitTemplate;
 
     @MockitoBean
     private CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
@@ -340,7 +344,7 @@ class ProdutoControllerTest {
         @Test
         @DisplayName("Deve remover produto com sucesso e retornar 204")
         void deveRemoverProdutoComSucesso() throws Exception {
-            doNothing().when(produtoService).deletarProduto(PRODUTO_ID);
+            when(produtoService.deletarProduto(PRODUTO_ID)).thenReturn(produtoResponseDTO);
 
             mockMvc.perform(delete("/produtos/{id}", PRODUTO_ID))
                     .andDo(print())
