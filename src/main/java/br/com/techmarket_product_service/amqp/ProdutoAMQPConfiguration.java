@@ -1,5 +1,6 @@
 package br.com.techmarket_product_service.amqp;
 
+import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -29,7 +30,6 @@ public class ProdutoAMQPConfiguration {
         return new Jackson2JsonMessageConverter();
     }
 
-
     @Bean
     public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory, Jackson2JsonMessageConverter messageConverter) {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
@@ -40,5 +40,10 @@ public class ProdutoAMQPConfiguration {
     @Bean
     public TopicExchange topicExchange() {
         return new TopicExchange("produto.exchange");
+    }
+
+    @Bean
+    public DirectExchange deadLetterExchange() {
+        return new DirectExchange("produto.dlx");
     }
 }
