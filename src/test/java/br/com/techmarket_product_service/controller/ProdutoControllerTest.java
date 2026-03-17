@@ -57,9 +57,6 @@ class ProdutoControllerTest {
     private SecurityFilter securityFilter;
 
     @MockitoBean
-    private RabbitTemplate rabbitTemplate;
-
-    @MockitoBean
     private CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
     @MockitoBean
