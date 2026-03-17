@@ -77,6 +77,20 @@ public class ProdutoAMQPConfiguration {
     }
 
     @Bean
+    public Queue filaPedidosCancelados() {
+        return QueueBuilder
+                .durable("pedido.cancelado")
+                .withArgument("x-dead-letter-exchange", "pedido.dlx")
+                .withArgument("x-dead-letter-routing-key", "pedido.cancelado.dlq")
+                .build();
+    }
+
+    @Bean
+    public Queue filaPedidosCanceladosDLQ() {
+        return QueueBuilder.durable("pedido.cancelado.dlq").build();
+    }
+
+    @Bean
     public TopicExchange pedidoTopicExchange() {
         return ExchangeBuilder.topicExchange("pedido.exchange").build();
     }
@@ -99,6 +113,21 @@ public class ProdutoAMQPConfiguration {
         return BindingBuilder.bind(filaPedidosCriadosDLQ)
                 .to(pedidoDeadLetterExchange)
                 .with("pedido.criado.dlq");
+    }
+
+    @Bean
+    public Binding bindPedidosCancelados(Queue filaPedidosCancelados, TopicExchange pedidoTopicExchange) {
+        return BindingBuilder
+                .bind(filaPedidosCancelados)
+                .to(pedidoTopicExchange)
+                .with("pedido.cancelado");
+    }
+
+    @Bean
+    public Binding bindDLQPedidosCancelados(Queue filaPedidosCanceladosDLQ, DirectExchange pedidoDeadLetterExchange) {
+        return BindingBuilder.bind(filaPedidosCanceladosDLQ)
+                .to(pedidoDeadLetterExchange)
+                .with("pedido.cancelado.dlq");
     }
 
 }

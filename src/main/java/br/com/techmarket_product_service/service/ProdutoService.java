@@ -104,6 +104,20 @@ public class ProdutoService {
     }
 
     @Transactional
+    public void devolverEstoque(String idMongo, Integer quantidade) {
+        Produto produto = buscarEntidadeProdutoPorId(idMongo);
+
+        Integer estoque = produto.getEstoque();
+
+        produto.setEstoque(estoque + quantidade);
+        produto = produtoRepository.save(produto);
+
+        ProdutoSnapshotDTO produtoSnapshotDTO = converterParaProdutoSnapshot(produto);
+        System.out.println("Enviando produto atualizado: " + produtoSnapshotDTO);
+        rabbitTemplate.convertAndSend("produto.exchange", "produto.atualizado", produtoSnapshotDTO);
+    }
+
+    @Transactional
     public void deletarProduto(String id) {
         var produto = buscarEntidadeProdutoPorId(id);
         produtoRepository.delete(produto);

@@ -25,4 +25,15 @@ public class PedidoListener {
             System.out.println("Estoque do produto " + item.produtoIdMongo() + " atualizado!");
         }
     }
+
+    @RabbitListener(queues = "pedido.cancelado")
+    public void recebePedidoCancelado(PedidoCriadoEventDTO evento) {
+        System.out.println("Mensagem recebida da fila de pedidos cancelados");
+        System.out.println("Conteúdo: " + evento);
+
+        for (ItemPedidoEventDTO item: evento.itens()) {
+            produtoService.devolverEstoque(item.produtoIdMongo(), item.quantidade());
+            System.out.println("Estoque do produto " + item.produtoIdMongo() + " atualizado!");
+        }
+    }
 }
