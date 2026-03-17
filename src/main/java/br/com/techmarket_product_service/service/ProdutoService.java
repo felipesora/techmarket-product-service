@@ -5,6 +5,7 @@ import br.com.techmarket_product_service.dto.produto.ProdutoResponseDTO;
 import br.com.techmarket_product_service.dto.produto.ProdutoUpdateDTO;
 import br.com.techmarket_product_service.dto.produtoSnapshot.ProdutoSnapshotDTO;
 import br.com.techmarket_product_service.exception.EntityNotFoundException;
+import br.com.techmarket_product_service.exception.RegraNegocioException;
 import br.com.techmarket_product_service.model.Produto;
 import br.com.techmarket_product_service.model.enums.StatusProduto;
 import br.com.techmarket_product_service.repository.ProdutoRepository;
@@ -82,6 +83,24 @@ public class ProdutoService {
         rabbitTemplate.convertAndSend("produto.exchange", "produto.atualizado", produtoSnapshotDTO);
 
         return converterParaResponseDTO(produto);
+    }
+
+    @Transactional
+    public void baixarEstoque(String idMongo, Integer quantidade) {
+        Produto produto = buscarEntidadeProdutoPorId(idMongo);
+
+        Integer estoque = produto.getEstoque();
+
+        if (quantidade > estoque) {
+            throw new RegraNegocioException("Estoque insuficiente para o produto " + produto.getId());
+        }
+
+        produto.setEstoque(estoque - quantidade);
+        produto = produtoRepository.save(produto);
+
+        ProdutoSnapshotDTO produtoSnapshotDTO = converterParaProdutoSnapshot(produto);
+        System.out.println("Enviando produto atualizado: " + produtoSnapshotDTO);
+        rabbitTemplate.convertAndSend("produto.exchange", "produto.atualizado", produtoSnapshotDTO);
     }
 
     @Transactional
