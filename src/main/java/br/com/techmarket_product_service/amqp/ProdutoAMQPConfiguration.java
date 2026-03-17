@@ -1,8 +1,7 @@
 package br.com.techmarket_product_service.amqp;
 
-import org.springframework.amqp.core.DirectExchange;
-import org.springframework.amqp.core.FanoutExchange;
-import org.springframework.amqp.core.TopicExchange;
+import org.springframework.amqp.core.*;
+import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -37,6 +36,7 @@ public class ProdutoAMQPConfiguration {
         return rabbitTemplate;
     }
 
+    // Config Producer
     @Bean
     public TopicExchange topicExchange() {
         return new TopicExchange("produto.exchange");
@@ -46,4 +46,59 @@ public class ProdutoAMQPConfiguration {
     public DirectExchange deadLetterExchange() {
         return new DirectExchange("produto.dlx");
     }
+
+    // Config Consumer
+    @Bean
+    public SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory(ConnectionFactory connectionFactory, Jackson2JsonMessageConverter messageConverter) {
+
+        SimpleRabbitListenerContainerFactory factory =
+                new SimpleRabbitListenerContainerFactory();
+
+        factory.setConnectionFactory(connectionFactory);
+        factory.setMessageConverter(messageConverter);
+
+        factory.setDefaultRequeueRejected(false);
+
+        return factory;
+    }
+
+    @Bean
+    public Queue filaPedidosCriados() {
+        return QueueBuilder
+                .durable("pedido.criado")
+                .withArgument("x-dead-letter-exchange", "pedido.dlx")
+                .withArgument("x-dead-letter-routing-key", "pedido.criado.dlq")
+                .build();
+    }
+
+    @Bean
+    public Queue filaPedidosCriadosDLQ() {
+        return QueueBuilder.durable("pedido.criado.dlq").build();
+    }
+
+    @Bean
+    public TopicExchange pedidoTopicExchange() {
+        return ExchangeBuilder.topicExchange("pedido.exchange").build();
+    }
+
+    @Bean
+    public DirectExchange pedidoDeadLetterExchange() {
+        return ExchangeBuilder.directExchange("pedido.dlx").build();
+    }
+
+    @Bean
+    public Binding bindPedidosCriados(Queue filaPedidosCriados, TopicExchange pedidoTopicExchange) {
+        return BindingBuilder
+                .bind(filaPedidosCriados)
+                .to(pedidoTopicExchange)
+                .with("pedido.criado");
+    }
+
+    @Bean
+    public Binding bindDLQPedidosCriados(Queue filaPedidosCriadosDLQ, DirectExchange pedidoDeadLetterExchange) {
+        return BindingBuilder.bind(filaPedidosCriadosDLQ)
+                .to(pedidoDeadLetterExchange)
+                .with("pedido.criado.dlq");
+    }
+
 }
