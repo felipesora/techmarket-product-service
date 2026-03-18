@@ -59,15 +59,4 @@ public class ProdutoController {
         produtoService.deletarProduto(id);
         return ResponseEntity.noContent().build();
     }
-
-    private ProdutoSnapshotDTO converterParaProdutoSnapshot(ProdutoResponseDTO produtoResponseDTO) {
-        return new ProdutoSnapshotDTO(
-                produtoResponseDTO.id(),
-                produtoResponseDTO.codigo(),
-                produtoResponseDTO.nome(),
-                produtoResponseDTO.preco(),
-                produtoResponseDTO.estoque(),
-                produtoResponseDTO.status()
-        );
-    }
 }
