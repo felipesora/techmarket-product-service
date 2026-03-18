@@ -23,15 +23,12 @@ public class ProdutoController {
 
     private final ProdutoService produtoService;
 
-    private final RabbitTemplate rabbitTemplate;
-
-    public ProdutoController(ProdutoService produtoService, RabbitTemplate rabbitTemplate) {
+    public ProdutoController(ProdutoService produtoService) {
         this.produtoService = produtoService;
-        this.rabbitTemplate = rabbitTemplate;
     }
 
     @GetMapping
-    public ResponseEntity<Page<ProdutoResponseDTO>> listarTodosUsuarios(@PageableDefault(size = 10) Pageable paginacao) {
+    public ResponseEntity<Page<ProdutoResponseDTO>> listarTodosProdutos(@PageableDefault(size = 10) Pageable paginacao) {
         Page<ProdutoResponseDTO> produtos = produtoService.obterTodosProdutos(paginacao);
         return ResponseEntity.ok(produtos);
     }
@@ -43,13 +40,9 @@ public class ProdutoController {
     }
 
     @PostMapping
-    public ResponseEntity<ProdutoResponseDTO> cadastrarUsuario(@RequestBody @Valid ProdutoCreateDTO dto, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<ProdutoResponseDTO> cadastrarProduto(@RequestBody @Valid ProdutoCreateDTO dto, UriComponentsBuilder uriBuilder) {
         ProdutoResponseDTO produto = produtoService.cadastrarProduto(dto);
         URI endereco = uriBuilder.path("/produtos/{id}").buildAndExpand(produto.id()).toUri();
-
-        ProdutoSnapshotDTO produtoSnapshotDTO = converterParaProdutoSnapshot(produto);
-        System.out.println("Enviando produto cadastrado: " + produtoSnapshotDTO);
-        rabbitTemplate.convertAndSend("produto.exchange", "produto.criado", produtoSnapshotDTO);
 
         return ResponseEntity.created(endereco).body(produto);
     }
@@ -58,32 +51,12 @@ public class ProdutoController {
     public ResponseEntity<ProdutoResponseDTO> atualizar(@PathVariable @NotNull String id, @RequestBody @Valid ProdutoUpdateDTO dto) {
         ProdutoResponseDTO atualizado = produtoService.atualizarProduto(id, dto);
 
-        ProdutoSnapshotDTO produtoSnapshotDTO = converterParaProdutoSnapshot(atualizado);
-        System.out.println("Enviando produto atualizado: " + produtoSnapshotDTO);
-        rabbitTemplate.convertAndSend("produto.exchange", "produto.atualizado", produtoSnapshotDTO);
-
         return ResponseEntity.ok(atualizado);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ProdutoResponseDTO> remover(@PathVariable @NotNull String id) {
-        ProdutoResponseDTO deletado = produtoService.deletarProduto(id);
-
-        ProdutoSnapshotDTO produtoSnapshotDTO = converterParaProdutoSnapshot(deletado);
-        System.out.println("Enviando produto removido: " + produtoSnapshotDTO);
-        rabbitTemplate.convertAndSend("produto.exchange", "produto.removido", produtoSnapshotDTO);
-
+    public ResponseEntity<Void> remover(@PathVariable @NotNull String id) {
+        produtoService.deletarProduto(id);
         return ResponseEntity.noContent().build();
-    }
-
-    private ProdutoSnapshotDTO converterParaProdutoSnapshot(ProdutoResponseDTO produtoResponseDTO) {
-        return new ProdutoSnapshotDTO(
-                produtoResponseDTO.id(),
-                produtoResponseDTO.codigo(),
-                produtoResponseDTO.nome(),
-                produtoResponseDTO.preco(),
-                produtoResponseDTO.estoque(),
-                produtoResponseDTO.status()
-        );
     }
 }

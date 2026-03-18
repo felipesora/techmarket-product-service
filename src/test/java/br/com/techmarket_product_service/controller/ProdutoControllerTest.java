@@ -57,9 +57,6 @@ class ProdutoControllerTest {
     private SecurityFilter securityFilter;
 
     @MockitoBean
-    private RabbitTemplate rabbitTemplate;
-
-    @MockitoBean
     private CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
     @MockitoBean
@@ -344,12 +341,14 @@ class ProdutoControllerTest {
         @Test
         @DisplayName("Deve remover produto com sucesso e retornar 204")
         void deveRemoverProdutoComSucesso() throws Exception {
-            when(produtoService.deletarProduto(PRODUTO_ID)).thenReturn(produtoResponseDTO);
+            // Configura o comportamento do service (não precisa retornar nada pois é void)
+            doNothing().when(produtoService).deletarProduto(PRODUTO_ID);
 
             mockMvc.perform(delete("/produtos/{id}", PRODUTO_ID))
                     .andDo(print())
                     .andExpect(status().isNoContent());
 
+            // Verifica se o método foi chamado corretamente
             verify(produtoService, times(1)).deletarProduto(PRODUTO_ID);
         }
 
