@@ -19,7 +19,7 @@ public class PedidoListener {
         this.produtoService = produtoService;
     }
 
-    @RabbitListener(queues = "pedido.criado")
+    @RabbitListener(queues = "pedido.criado.estoque.fila")
     public void recebePedidoCriado(PedidoCriadoEventDTO evento) {
         System.out.println("Mensagem recebida da fila de pedidos criados");
         System.out.println("Conteúdo: " + evento);
@@ -27,7 +27,7 @@ public class PedidoListener {
         processarItens(evento.itens(), true);
     }
 
-    @RabbitListener(queues = "pedido.cancelado")
+    @RabbitListener(queues = "pedido.cancelado.estoque.fila")
     public void recebePedidoCancelado(PedidoCanceladoEventDTO evento) {
         System.out.println("Mensagem recebida da fila de pedidos cancelados");
         System.out.println("Conteúdo: " + evento);

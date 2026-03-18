@@ -65,7 +65,7 @@ public class ProdutoAMQPConfiguration {
     @Bean
     public Queue filaPedidosCriados() {
         return QueueBuilder
-                .durable("pedido.criado")
+                .durable("pedido.criado.estoque.fila")
                 .withArgument("x-dead-letter-exchange", "pedido.dlx")
                 .withArgument("x-dead-letter-routing-key", "pedido.criado.dlq")
                 .build();
@@ -73,13 +73,13 @@ public class ProdutoAMQPConfiguration {
 
     @Bean
     public Queue filaPedidosCriadosDLQ() {
-        return QueueBuilder.durable("pedido.criado.dlq").build();
+        return QueueBuilder.durable("pedido.criado.estoque.fila.dlq").build();
     }
 
     @Bean
     public Queue filaPedidosCancelados() {
         return QueueBuilder
-                .durable("pedido.cancelado")
+                .durable("pedido.cancelado.estoque.fila")
                 .withArgument("x-dead-letter-exchange", "pedido.dlx")
                 .withArgument("x-dead-letter-routing-key", "pedido.cancelado.dlq")
                 .build();
@@ -87,7 +87,7 @@ public class ProdutoAMQPConfiguration {
 
     @Bean
     public Queue filaPedidosCanceladosDLQ() {
-        return QueueBuilder.durable("pedido.cancelado.dlq").build();
+        return QueueBuilder.durable("pedido.cancelado.estoque.fila.dlq").build();
     }
 
     @Bean
