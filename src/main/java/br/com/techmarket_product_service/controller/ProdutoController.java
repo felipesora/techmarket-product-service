@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/produtos")
@@ -30,6 +31,12 @@ public class ProdutoController {
     @GetMapping
     public ResponseEntity<Page<ProdutoResponseDTO>> listarTodosProdutos(@PageableDefault(size = 10) Pageable paginacao) {
         Page<ProdutoResponseDTO> produtos = produtoService.obterTodosProdutos(paginacao);
+        return ResponseEntity.ok(produtos);
+    }
+
+    @PostMapping("/favoritos")
+    public ResponseEntity<List<ProdutoResponseDTO>> buscarProdutosFavoritos(@RequestBody List<String> ids) {
+        var produtos = produtoService.obterProdutosFavoritos(ids);
         return ResponseEntity.ok(produtos);
     }
 

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class ProdutoService {
@@ -34,6 +35,14 @@ public class ProdutoService {
         return produtoRepository
                 .findAll(paginacao)
                 .map(ProdutoMapper::converterParaResponseDTO);
+    }
+
+    public List<ProdutoResponseDTO> obterProdutosFavoritos(List<String> ids) {
+        return produtoRepository
+                .findAllById(ids)
+                .stream()
+                .map(ProdutoMapper::converterParaResponseDTO)
+                .toList();
     }
 
     public ProdutoResponseDTO obterProdutoPorId(String id) {
