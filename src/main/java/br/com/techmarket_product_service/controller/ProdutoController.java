@@ -3,11 +3,9 @@ package br.com.techmarket_product_service.controller;
 import br.com.techmarket_product_service.dto.produto.ProdutoCreateDTO;
 import br.com.techmarket_product_service.dto.produto.ProdutoResponseDTO;
 import br.com.techmarket_product_service.dto.produto.ProdutoUpdateDTO;
-import br.com.techmarket_product_service.dto.produtoSnapshot.ProdutoSnapshotDTO;
 import br.com.techmarket_product_service.service.ProdutoService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -31,6 +29,23 @@ public class ProdutoController {
     @GetMapping
     public ResponseEntity<Page<ProdutoResponseDTO>> listarTodosProdutos(@PageableDefault(size = 10) Pageable paginacao) {
         Page<ProdutoResponseDTO> produtos = produtoService.obterTodosProdutos(paginacao);
+        return ResponseEntity.ok(produtos);
+    }
+
+    @GetMapping(params = "categoria")
+    public ResponseEntity<List<ProdutoResponseDTO>> listarProdutosPorCategoria(
+            @RequestParam String categoria,
+            @RequestParam(required = false) String ordenarPor) {
+        var produtos = produtoService.obterProdutosPorCategoria(categoria, ordenarPor);
+        return ResponseEntity.ok(produtos);
+    }
+
+    @GetMapping(params = "busca")
+    public ResponseEntity<List<ProdutoResponseDTO>> buscarProdutos(
+            @RequestParam String busca,
+            @RequestParam(required = false) String ordenarPor) {
+
+        var produtos = produtoService.buscarProdutosPorNome(busca, ordenarPor);
         return ResponseEntity.ok(produtos);
     }
 
