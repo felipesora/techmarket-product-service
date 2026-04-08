@@ -41,10 +41,10 @@ public class SecurityConfiguration {
                         .authenticationEntryPoint(customAuthenticationEntryPoint)
                         .accessDeniedHandler(customAccessDeniedHandler))
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.GET, "/produtos/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/produtos").hasRole("ADMINISTRADOR")
                         .requestMatchers(HttpMethod.PUT, "/produtos/**").hasRole("ADMINISTRADOR")
                         .requestMatchers(HttpMethod.DELETE, "/produtos/**").hasRole("ADMINISTRADOR")
-                        .requestMatchers(HttpMethod.GET, "/produtos").hasAnyRole("ADMINISTRADOR", "USUARIO")
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll()
                         .anyRequest().authenticated()
                 )
