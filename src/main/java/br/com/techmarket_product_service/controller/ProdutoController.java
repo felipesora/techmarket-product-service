@@ -49,6 +49,12 @@ public class ProdutoController {
         return ResponseEntity.ok(produtos);
     }
 
+    @GetMapping("/total-produtos-ativos")
+    public ResponseEntity<Long> totalProdutosAtivos() {
+        long total = produtoService.contarUsuariosAtivosComuns();
+        return ResponseEntity.ok(total);
+    }
+
     @PostMapping("/favoritos")
     public ResponseEntity<List<ProdutoResponseDTO>> buscarProdutosFavoritos(@RequestBody List<String> ids) {
         var produtos = produtoService.obterProdutosFavoritos(ids);
