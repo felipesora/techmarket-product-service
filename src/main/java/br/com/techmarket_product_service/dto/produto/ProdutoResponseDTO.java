@@ -16,5 +16,6 @@ public record ProdutoResponseDTO(
         BigDecimal preco,
         Integer estoque,
         StatusProduto status,
-        LocalDateTime dataCriacao
+        LocalDateTime dataCriacao,
+        String imagemId
 ) {}

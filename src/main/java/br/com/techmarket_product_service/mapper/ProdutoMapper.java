@@ -55,7 +55,8 @@ public final class ProdutoMapper {
                 produto.getPreco(),
                 produto.getEstoque(),
                 produto.getStatus(),
-                produto.getDataCriacao()
+                produto.getDataCriacao(),
+                produto.getImagemId()
         );
     }
 

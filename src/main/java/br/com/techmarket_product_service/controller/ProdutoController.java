@@ -1,16 +1,21 @@
 package br.com.techmarket_product_service.controller;
 
+import br.com.techmarket_product_service.dto.imagem.ImagemResponseDTO;
 import br.com.techmarket_product_service.dto.produto.ProdutoCreateDTO;
 import br.com.techmarket_product_service.dto.produto.ProdutoResponseDTO;
 import br.com.techmarket_product_service.dto.produto.ProdutoUpdateDTO;
+import br.com.techmarket_product_service.service.ProdutoImagemService;
 import br.com.techmarket_product_service.service.ProdutoService;
+import com.mongodb.client.gridfs.model.GridFSFile;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
@@ -21,9 +26,11 @@ import java.util.List;
 public class ProdutoController {
 
     private final ProdutoService produtoService;
+    private final ProdutoImagemService produtoImagemService;
 
-    public ProdutoController(ProdutoService produtoService) {
+    public ProdutoController(ProdutoService produtoService, ProdutoImagemService produtoImagemService) {
         this.produtoService = produtoService;
+        this.produtoImagemService = produtoImagemService;
     }
 
     @GetMapping
@@ -67,12 +74,24 @@ public class ProdutoController {
         return ResponseEntity.ok(produto);
     }
 
+    @GetMapping("/imagem/{imagemId}")
+    public ResponseEntity<byte[]> buscarImagemProduto(@PathVariable String imagemId) {
+        ImagemResponseDTO imagem = produtoImagemService.buscarImagem(imagemId);
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, imagem.contentType()).body(imagem.dados());
+    }
+
     @PostMapping
     public ResponseEntity<ProdutoResponseDTO> cadastrarProduto(@RequestBody @Valid ProdutoCreateDTO dto, UriComponentsBuilder uriBuilder) {
         ProdutoResponseDTO produto = produtoService.cadastrarProduto(dto);
         URI endereco = uriBuilder.path("/produtos/{id}").buildAndExpand(produto.id()).toUri();
 
         return ResponseEntity.created(endereco).body(produto);
+    }
+
+    @PostMapping("/{id}/imagem")
+    public ResponseEntity<String> uploadImagem(@PathVariable String id, @RequestParam("file") MultipartFile file) {
+        String imagemId = produtoImagemService.salvarImagem(id, file);
+        return ResponseEntity.ok(imagemId);
     }
 
     @PutMapping("/{id}")

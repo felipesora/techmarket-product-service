@@ -39,4 +39,6 @@ public class Produto {
     private StatusProduto status;
 
     private LocalDateTime dataCriacao;
+
+    private String imagemId;
 }
