@@ -157,6 +157,12 @@ public class ProdutoService {
         rabbitTemplate.convertAndSend("produto.exchange", "produto.removido", produtoSnapshotDTO);
     }
 
+    public long contarUsuariosAtivosComuns() {
+        return produtoRepository.countByStatus(
+                StatusProduto.ATIVO.ATIVO
+        );
+    }
+
     private Produto buscarEntidadeProdutoPorId(String id) {
         return produtoRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Produto com id: " + id + " não encontrado"));
