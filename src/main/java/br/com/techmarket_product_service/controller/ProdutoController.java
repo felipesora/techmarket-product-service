@@ -96,7 +96,7 @@ public class ProdutoController {
 
     @PostMapping("/{id}/imagem")
     public ResponseEntity<String> uploadImagem(@PathVariable String id, @RequestParam("file") MultipartFile file) {
-        String imagemId = produtoImagemService.salvarImagem(id, file);
+        String imagemId = produtoImagemService.salvarImagemMultipart(id, file);
         return ResponseEntity.ok(imagemId);
     }
 

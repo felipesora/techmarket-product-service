@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 @Service
 public class ProdutoImagemService {
@@ -26,7 +27,7 @@ public class ProdutoImagemService {
         this.produtoRepository = produtoRepository;
     }
 
-    public String salvarImagem(String produtoId, MultipartFile file) {
+    public String salvarImagem(String produtoId, InputStream inputStream, String nomeArquivo, String contentType) {
         try {
             Produto produto = produtoRepository.findById(produtoId)
                     .orElseThrow(() -> new EntityNotFoundException("Produto com id: " + produtoId + " não encontrado"));
@@ -38,9 +39,9 @@ public class ProdutoImagemService {
 
             // salva no GridFS
             ObjectId fileId = gridFsTemplate.store(
-              file.getInputStream(),
-              file.getOriginalFilename(),
-              file.getContentType()
+              inputStream,
+              nomeArquivo,
+              contentType
             );
 
             // salva referencia no produto
@@ -51,6 +52,14 @@ public class ProdutoImagemService {
 
         } catch (Exception e) {
             throw new RuntimeException("Erro ao salvar imagem", e);
+        }
+    }
+
+    public String salvarImagemMultipart(String produtoId, MultipartFile file) {
+        try {
+            return salvarImagem(produtoId, file.getInputStream(), file.getOriginalFilename(), file.getContentType());
+        } catch (IOException e) {
+            throw new RuntimeException("Erro ao processar arquivo", e);
         }
     }
 

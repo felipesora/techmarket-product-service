@@ -18,4 +18,6 @@ public interface ProdutoRepository extends MongoRepository<Produto, String> {
     Page<Produto> findByStatusOrderByQuantidadeVendidaDesc(StatusProduto status, Pageable pageable);
 
     long countByStatus(StatusProduto status);
+
+    boolean existsByCodigo(String codigo);
 }
