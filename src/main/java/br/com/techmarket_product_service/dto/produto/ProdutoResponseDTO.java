@@ -17,5 +17,6 @@ public record ProdutoResponseDTO(
         Integer estoque,
         StatusProduto status,
         LocalDateTime dataCriacao,
-        String imagemId
+        String imagemId,
+        Integer quantidadeVendida
 ) {}

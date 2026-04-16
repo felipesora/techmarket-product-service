@@ -39,6 +39,12 @@ public class ProdutoController {
         return ResponseEntity.ok(produtos);
     }
 
+    @GetMapping("/mais-vendidos")
+    public ResponseEntity<Page<ProdutoResponseDTO>> listarProdutosMaisVendidos(@PageableDefault(size = 10) Pageable paginacao) {
+        Page<ProdutoResponseDTO> produtos = produtoService.obterProdutosMaisVendidos(paginacao);
+        return ResponseEntity.ok(produtos);
+    }
+
     @GetMapping(params = "categoria")
     public ResponseEntity<List<ProdutoResponseDTO>> listarProdutosPorCategoria(
             @RequestParam String categoria,

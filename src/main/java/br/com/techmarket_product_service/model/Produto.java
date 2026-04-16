@@ -41,4 +41,6 @@ public class Produto {
     private LocalDateTime dataCriacao;
 
     private String imagemId;
+
+    private Integer quantidadeVendida;
 }
