@@ -7,6 +7,7 @@ import br.com.techmarket_product_service.dto.produtoSnapshot.ProdutoSnapshotDTO;
 import br.com.techmarket_product_service.model.Produto;
 import br.com.techmarket_product_service.model.enums.StatusProduto;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public final class ProdutoMapper {
@@ -21,7 +22,8 @@ public final class ProdutoMapper {
         produto.setDescricao(dto.descricao());
         produto.setCategoria(dto.categoria());
         produto.setMarca(dto.marca());
-        produto.setPreco(dto.preco());
+        produto.setPrecoUnitario(dto.precoUnitario());
+        produto.setPrecoPromocional(dto.precoPromocional());
         produto.setEstoque(dto.estoque());
         produto.setStatus(StatusProduto.ATIVO);
         produto.setDataCriacao(LocalDateTime.now());
@@ -37,7 +39,8 @@ public final class ProdutoMapper {
         produto.setDescricao(dto.descricao());
         produto.setCategoria(dto.categoria());
         produto.setMarca(dto.marca());
-        produto.setPreco(dto.preco());
+        produto.setPrecoUnitario(dto.precoUnitario());
+        produto.setPrecoPromocional(dto.precoPromocional());
         produto.setEstoque(dto.estoque());
         produto.setStatus(dto.status());
         produto.setDataCriacao(produto.getDataCriacao());
@@ -53,7 +56,9 @@ public final class ProdutoMapper {
                 produto.getDescricao(),
                 produto.getCategoria(),
                 produto.getMarca(),
-                produto.getPreco(),
+                produto.getPrecoUnitario(),
+                produto.getPrecoPromocional(),
+                getPrecoFinal(produto),
                 produto.getEstoque(),
                 produto.getStatus(),
                 produto.getDataCriacao(),
@@ -67,9 +72,16 @@ public final class ProdutoMapper {
                 produto.getId(),
                 produto.getCodigo(),
                 produto.getNome(),
-                produto.getPreco(),
+                produto.getPrecoUnitario(),
+                produto.getPrecoPromocional(),
                 produto.getEstoque(),
                 produto.getStatus()
         );
+    }
+
+    private static BigDecimal getPrecoFinal(Produto produto) {
+        BigDecimal precoUnitario = produto.getPrecoUnitario();
+        BigDecimal precoPromocional = produto.getPrecoPromocional();
+        return precoPromocional != null ? precoPromocional : precoUnitario;
     }
 }

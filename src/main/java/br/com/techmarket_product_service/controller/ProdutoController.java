@@ -45,6 +45,12 @@ public class ProdutoController {
         return ResponseEntity.ok(produtos);
     }
 
+    @GetMapping("/promocoes")
+    public ResponseEntity<Page<ProdutoResponseDTO>> listarProdutosEmPromocao(@PageableDefault(size = 10) Pageable paginacao) {
+        var produtos = produtoService.obterProdutosEmPromocao(paginacao);
+        return ResponseEntity.ok(produtos);
+    }
+
     @GetMapping(params = "categoria")
     public ResponseEntity<List<ProdutoResponseDTO>> listarProdutosPorCategoria(
             @RequestParam String categoria,

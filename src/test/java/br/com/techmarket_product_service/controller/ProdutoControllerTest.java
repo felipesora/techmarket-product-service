@@ -76,7 +76,9 @@ class ProdutoControllerTest {
     private final String PRODUTO_DESCRICAO = "Smartphone Samsung Galaxy S23 256GB";
     private final CategoriaProduto PRODUTO_CATEGORIA = CategoriaProduto.CELULARES;
     private final String PRODUTO_MARCA = "Samsung";
-    private final BigDecimal PRODUTO_PRECO = new BigDecimal("4500.00");
+    private final BigDecimal PRODUTO_PRECO_UNITARIO = new BigDecimal("4500.00");
+    private final BigDecimal PRODUTO_PRECO_PROMOCIONAL = new BigDecimal("4300.00");
+    private final BigDecimal PRODUTO_PRECO_FINAL = new BigDecimal("4300.00");
     private final Integer PRODUTO_ESTOQUE = 50;
     private final StatusProduto PRODUTO_STATUS = StatusProduto.ATIVO;
     private final LocalDateTime PRODUTO_DATA_CRIACAO = LocalDateTime.now();
@@ -96,7 +98,9 @@ class ProdutoControllerTest {
                 PRODUTO_DESCRICAO,
                 PRODUTO_CATEGORIA,
                 PRODUTO_MARCA,
-                PRODUTO_PRECO,
+                PRODUTO_PRECO_UNITARIO,
+                PRODUTO_PRECO_PROMOCIONAL,
+                PRODUTO_PRECO_FINAL,
                 PRODUTO_ESTOQUE,
                 PRODUTO_STATUS,
                 PRODUTO_DATA_CRIACAO,
@@ -110,7 +114,8 @@ class ProdutoControllerTest {
                 PRODUTO_DESCRICAO,
                 PRODUTO_CATEGORIA,
                 PRODUTO_MARCA,
-                PRODUTO_PRECO,
+                PRODUTO_PRECO_UNITARIO,
+                PRODUTO_PRECO_PROMOCIONAL,
                 PRODUTO_ESTOQUE
         );
 
@@ -121,6 +126,7 @@ class ProdutoControllerTest {
                 CategoriaProduto.OUTROS,
                 PRODUTO_MARCA + " Atualizado",
                 new BigDecimal("5000.00"),
+                null,
                 30,
                 StatusProduto.INATIVO
         );
@@ -153,7 +159,7 @@ class ProdutoControllerTest {
                     .andExpect(jsonPath("$.content[0].codigo", is(PRODUTO_CODIGO)))
                     .andExpect(jsonPath("$.content[0].nome", is(PRODUTO_NOME)))
                     .andExpect(jsonPath("$.content[0].categoria", is(PRODUTO_CATEGORIA.toString())))
-                    .andExpect(jsonPath("$.content[0].preco", is(PRODUTO_PRECO.doubleValue())))
+                    .andExpect(jsonPath("$.content[0].precoFinal", is(PRODUTO_PRECO_FINAL.doubleValue())))
                     .andExpect(jsonPath("$.content[0].estoque", is(PRODUTO_ESTOQUE)))
                     .andExpect(jsonPath("$.totalElements", is(1)))
                     .andExpect(jsonPath("$.totalPages", is(1)));
@@ -210,7 +216,7 @@ class ProdutoControllerTest {
                     .andExpect(jsonPath("$.codigo", is(PRODUTO_CODIGO)))
                     .andExpect(jsonPath("$.nome", is(PRODUTO_NOME)))
                     .andExpect(jsonPath("$.categoria", is(PRODUTO_CATEGORIA.toString())))
-                    .andExpect(jsonPath("$.preco", is(PRODUTO_PRECO.doubleValue())))
+                    .andExpect(jsonPath("$.precoFinal", is(PRODUTO_PRECO_FINAL.doubleValue())))
                     .andExpect(jsonPath("$.estoque", is(PRODUTO_ESTOQUE)))
                     .andExpect(jsonPath("$.status", is(PRODUTO_STATUS.toString())));
 
@@ -269,7 +275,8 @@ class ProdutoControllerTest {
                     null,
                     PRODUTO_CATEGORIA,
                     null,
-                    PRODUTO_PRECO,
+                    PRODUTO_PRECO_UNITARIO,
+                    PRODUTO_PRECO_UNITARIO,
                     PRODUTO_ESTOQUE
             );
 
@@ -280,7 +287,9 @@ class ProdutoControllerTest {
                     null,
                     PRODUTO_CATEGORIA,
                     null,
-                    PRODUTO_PRECO,
+                    PRODUTO_PRECO_UNITARIO,
+                    PRODUTO_PRECO_PROMOCIONAL,
+                    PRODUTO_PRECO_FINAL,
                     PRODUTO_ESTOQUE,
                     PRODUTO_STATUS,
                     PRODUTO_DATA_CRIACAO,

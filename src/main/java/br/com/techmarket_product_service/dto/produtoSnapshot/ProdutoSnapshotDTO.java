@@ -12,6 +12,8 @@ public record ProdutoSnapshotDTO(
         String nome,
         @JsonProperty("preco_unitario")
         BigDecimal precoUnitario,
+        @JsonProperty("preco_promocional")
+        BigDecimal precoPromocional,
         Integer estoque,
         StatusProduto status
 ) {
