@@ -9,6 +9,7 @@ import br.com.techmarket_product_service.exception.CustomAuthenticationEntryPoin
 import br.com.techmarket_product_service.exception.EntityNotFoundException;
 import br.com.techmarket_product_service.model.enums.CategoriaProduto;
 import br.com.techmarket_product_service.model.enums.StatusProduto;
+import br.com.techmarket_product_service.service.ProdutoImagemService;
 import br.com.techmarket_product_service.service.ProdutoService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -54,6 +55,9 @@ class ProdutoControllerTest {
     private ProdutoService produtoService;
 
     @MockitoBean
+    private ProdutoImagemService produtoImagemService;
+
+    @MockitoBean
     private SecurityFilter securityFilter;
 
     @MockitoBean
@@ -76,6 +80,8 @@ class ProdutoControllerTest {
     private final Integer PRODUTO_ESTOQUE = 50;
     private final StatusProduto PRODUTO_STATUS = StatusProduto.ATIVO;
     private final LocalDateTime PRODUTO_DATA_CRIACAO = LocalDateTime.now();
+    private final String ID_IMAGEM = "69e271a584d63a4887761a6e";
+    private final Integer QUANTIDADE_VENDIDA = 10;
 
     @BeforeEach
     void setUp() {
@@ -93,7 +99,9 @@ class ProdutoControllerTest {
                 PRODUTO_PRECO,
                 PRODUTO_ESTOQUE,
                 PRODUTO_STATUS,
-                PRODUTO_DATA_CRIACAO
+                PRODUTO_DATA_CRIACAO,
+                ID_IMAGEM,
+                QUANTIDADE_VENDIDA
         );
 
         produtoCreateDTO = new ProdutoCreateDTO(
@@ -275,7 +283,9 @@ class ProdutoControllerTest {
                     PRODUTO_PRECO,
                     PRODUTO_ESTOQUE,
                     PRODUTO_STATUS,
-                    PRODUTO_DATA_CRIACAO
+                    PRODUTO_DATA_CRIACAO,
+                    ID_IMAGEM,
+                    QUANTIDADE_VENDIDA
             );
 
             when(produtoService.cadastrarProduto(any(ProdutoCreateDTO.class))).thenReturn(responseSemOpcionais);
