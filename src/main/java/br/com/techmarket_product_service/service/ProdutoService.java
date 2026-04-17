@@ -45,6 +45,12 @@ public class ProdutoService {
                 .map(ProdutoMapper::converterParaResponseDTO);
     }
 
+    public Page<ProdutoResponseDTO> obterProdutosEmPromocao(Pageable paginacao) {
+        return produtoRepository
+                .findByPrecoPromocionalNotNullOrderByQuantidadeVendidaDesc(StatusProduto.ATIVO, paginacao)
+                .map(ProdutoMapper::converterParaResponseDTO);
+    }
+
     public List<ProdutoResponseDTO> obterProdutosPorIds(List<String> ids) {
         return produtoRepository
                 .findAllById(ids)
