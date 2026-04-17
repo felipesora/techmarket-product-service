@@ -68,9 +68,9 @@ public class ProdutoController {
         return ResponseEntity.ok(total);
     }
 
-    @PostMapping("/favoritos")
-    public ResponseEntity<List<ProdutoResponseDTO>> buscarProdutosFavoritos(@RequestBody List<String> ids) {
-        var produtos = produtoService.obterProdutosFavoritos(ids);
+    @PostMapping("/buscar-por-ids")
+    public ResponseEntity<List<ProdutoResponseDTO>> buscarProdutosPorIds(@RequestBody List<String> ids) {
+        var produtos = produtoService.obterProdutosPorIds(ids);
         return ResponseEntity.ok(produtos);
     }
 

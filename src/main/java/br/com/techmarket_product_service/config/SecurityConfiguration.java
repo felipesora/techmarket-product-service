@@ -43,6 +43,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, "/produtos/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/produtos/*/imagem").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/produtos/favoritos").hasAnyRole("ADMINISTRADOR", "USUARIO")
                         .requestMatchers(HttpMethod.POST, "/produtos").hasRole("ADMINISTRADOR")
                         .requestMatchers(HttpMethod.PUT, "/produtos/**").hasRole("ADMINISTRADOR")
                         .requestMatchers(HttpMethod.DELETE, "/produtos/**").hasRole("ADMINISTRADOR")

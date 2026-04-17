@@ -45,7 +45,7 @@ public class ProdutoService {
                 .map(ProdutoMapper::converterParaResponseDTO);
     }
 
-    public List<ProdutoResponseDTO> obterProdutosFavoritos(List<String> ids) {
+    public List<ProdutoResponseDTO> obterProdutosPorIds(List<String> ids) {
         return produtoRepository
                 .findAllById(ids)
                 .stream()
