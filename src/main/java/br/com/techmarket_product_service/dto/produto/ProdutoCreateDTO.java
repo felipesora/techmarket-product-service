@@ -23,9 +23,12 @@ public record ProdutoCreateDTO(
         @Size(max = 100, message = "A marca pode ter no máximo 100 caracteres")
         String marca,
 
-        @NotNull(message = "O preço é obrigatório")
-        @Positive(message = "O preço deve ser maior que zero")
-        BigDecimal preco,
+        @NotNull(message = "O preço unitário é obrigatório")
+        @Positive(message = "O preço unitário deve ser maior que zero")
+        BigDecimal precoUnitario,
+
+        @Positive(message = "O preço promocional deve ser maior que zero")
+        BigDecimal precoPromocional,
 
         @NotNull(message = "O estoque é obrigatório")
         @PositiveOrZero(message = "O estoque não pode ser negativo")

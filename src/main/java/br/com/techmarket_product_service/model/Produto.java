@@ -34,7 +34,9 @@ public class Produto {
 
     private String marca;
 
-    private BigDecimal preco;
+    private BigDecimal precoUnitario;
+
+    private BigDecimal precoPromocional;
 
     private Integer estoque;
 

@@ -35,47 +35,47 @@ public class DataSeeder implements CommandLineRunner {
 
     private void seedProdutos() {
         cadastrarSeNaoExistir("NB001", "Notebook Dell Inspiron 15", "Notebook i5 16GB RAM SSD 512GB", CategoriaProduto.NOTEBOOKS,
-                "Dell", BigDecimal.valueOf(4599.90), 15, "static/images/notebook.png");
+                "Dell", BigDecimal.valueOf(4599.90), BigDecimal.valueOf(3999.90),15, "static/images/notebook.png");
 
         cadastrarSeNaoExistir("CEL001", "iPhone 13", "Smartphone Apple 128GB", CategoriaProduto.CELULARES,
-                "Apple", BigDecimal.valueOf(4299.90), 20, "static/images/celular.png");
+                "Apple", BigDecimal.valueOf(4299.90), BigDecimal.valueOf(3799.90), 20, "static/images/celular.png");
 
         cadastrarSeNaoExistir("PC001", "PC Gamer Ryzen 5", "Computador gamer com RTX 3060", CategoriaProduto.COMPUTADORES,
-                "Pichau", BigDecimal.valueOf(5999.90), 10, "static/images/computador.png");
+                "Pichau", BigDecimal.valueOf(5999.90), BigDecimal.valueOf(5199.90), 10, "static/images/computador.png");
 
         cadastrarSeNaoExistir("MON001", "Monitor LG 24''", "Monitor Full HD IPS 75Hz", CategoriaProduto.MONITORES,
-                "LG", BigDecimal.valueOf(899.90), 25, "static/images/monitor.png");
+                "LG", BigDecimal.valueOf(899.90), null,25, "static/images/monitor.png");
 
         cadastrarSeNaoExistir("PER001", "Mousepad Gamer XL", "Mousepad grande com base antiderrapante", CategoriaProduto.PERIFERICOS,
-                "Redragon", BigDecimal.valueOf(79.90), 50, "static/images/periferico.png");
+                "Redragon", BigDecimal.valueOf(79.90), null,50, "static/images/periferico.png");
 
         cadastrarSeNaoExistir("TEC001", "Teclado Mecânico Redragon Kumara", "Switch Outemu Blue ABNT2", CategoriaProduto.TECLADOS,
-                "Redragon", BigDecimal.valueOf(249.90), 30, "static/images/teclado.png");
+                "Redragon", BigDecimal.valueOf(249.90), null, 30, "static/images/teclado.png");
 
         cadastrarSeNaoExistir("MOU001", "Mouse Logitech G502", "Mouse gamer RGB com sensor HERO", CategoriaProduto.MOUSES,
-                "Logitech", BigDecimal.valueOf(299.90), 40, "static/images/mouse.png");
+                "Logitech", BigDecimal.valueOf(299.90), BigDecimal.valueOf(229.90), 40, "static/images/mouse.png");
 
         cadastrarSeNaoExistir("HEA001", "Headset HyperX Cloud II", "Headset gamer com som surround 7.1", CategoriaProduto.HEADSETS,
-                "HyperX", BigDecimal.valueOf(399.90), 20, "static/images/headset.png");
+                "HyperX", BigDecimal.valueOf(399.90), BigDecimal.valueOf(299.90), 20, "static/images/headset.png");
 
         cadastrarSeNaoExistir("WEB001", "Webcam Logitech C920", "Webcam Full HD 1080p", CategoriaProduto.WEBCAMS,
-                "Logitech", BigDecimal.valueOf(349.90), 18, "static/images/webcam.png");
+                "Logitech", BigDecimal.valueOf(349.90), null, 18, "static/images/webcam.png");
 
         cadastrarSeNaoExistir("COM001", "Placa de Vídeo RTX 4060", "GPU NVIDIA 8GB GDDR6", CategoriaProduto.COMPONENTES,
-                "NVIDIA", BigDecimal.valueOf(2499.90), 12, "static/images/componente.png");
+                "NVIDIA", BigDecimal.valueOf(2499.90), null,12, "static/images/componente.png");
 
         cadastrarSeNaoExistir("AUD001", "Caixa de Som JBL Go 3", "Caixa de som Bluetooth portátil", CategoriaProduto.AUDIO,
-                "JBL", BigDecimal.valueOf(199.90), 35, "static/images/audio.png");
+                "JBL", BigDecimal.valueOf(199.90), null, 35, "static/images/audio.png");
 
         cadastrarSeNaoExistir("OUT001", "Suporte para Notebook", "Base ergonômica ajustável", CategoriaProduto.OUTROS,
-                "Multilaser", BigDecimal.valueOf(89.90), 40, "static/images/outros.png");
+                "Multilaser", BigDecimal.valueOf(89.90), null, 40, "static/images/outros.png");
     }
 
-    private void cadastrarSeNaoExistir(String codigo, String nome, String descricao, CategoriaProduto categoria, String marca, BigDecimal preco, Integer estoque, String caminhoImagem) {
+    private void cadastrarSeNaoExistir(String codigo, String nome, String descricao, CategoriaProduto categoria, String marca, BigDecimal precoUnitario, BigDecimal precoPromocional, Integer estoque, String caminhoImagem) {
         boolean existe = repository.existsByCodigo(codigo);
 
         if (!existe) {
-            ProdutoCreateDTO dto = new ProdutoCreateDTO(codigo, nome, descricao, categoria, marca, preco, estoque);
+            ProdutoCreateDTO dto = new ProdutoCreateDTO(codigo, nome, descricao, categoria, marca, precoUnitario, precoPromocional, estoque);
             var response = produtoService.cadastrarProduto(dto);
 
             if (caminhoImagem != null) {

@@ -53,7 +53,8 @@ class ProdutoServiceTest {
         produto = new Produto();
         produto.setId("abc123");
         produto.setNome("Produto Teste");
-        produto.setPreco(BigDecimal.valueOf(100));
+        produto.setPrecoUnitario(BigDecimal.valueOf(100));
+        produto.setPrecoPromocional(BigDecimal.valueOf(90));
         produto.setEstoque(10);
         produto.setStatus(StatusProduto.ATIVO);
     }
@@ -67,6 +68,7 @@ class ProdutoServiceTest {
                 CategoriaProduto.OUTROS,
                 "Teste",
                 BigDecimal.TEN,
+                BigDecimal.TWO,
                 10
         );
 
@@ -94,6 +96,7 @@ class ProdutoServiceTest {
                 CategoriaProduto.OUTROS,
                 "Teste",
                 BigDecimal.TEN,
+                BigDecimal.TWO,
                 20,
                 StatusProduto.ATIVO
         );
@@ -128,6 +131,7 @@ class ProdutoServiceTest {
                 CategoriaProduto.OUTROS,
                 "Teste",
                 BigDecimal.TEN,
+                BigDecimal.TWO,
                 10,
                 StatusProduto.ATIVO
         );
