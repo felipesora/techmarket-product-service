@@ -39,7 +39,13 @@ public class ProdutoService {
                 .map(ProdutoMapper::converterParaResponseDTO);
     }
 
-    public List<ProdutoResponseDTO> obterProdutosFavoritos(List<String> ids) {
+    public Page<ProdutoResponseDTO> obterProdutosMaisVendidos(Pageable paginacao) {
+        return produtoRepository
+                .findByStatusOrderByQuantidadeVendidaDesc(StatusProduto.ATIVO, paginacao)
+                .map(ProdutoMapper::converterParaResponseDTO);
+    }
+
+    public List<ProdutoResponseDTO> obterProdutosPorIds(List<String> ids) {
         return produtoRepository
                 .findAllById(ids)
                 .stream()
@@ -145,6 +151,24 @@ public class ProdutoService {
         ProdutoSnapshotDTO produtoSnapshotDTO = ProdutoMapper.converterParaProdutoSnapshot(produto);
         System.out.println("Enviando produto atualizado: " + produtoSnapshotDTO);
         rabbitTemplate.convertAndSend("produto.exchange", "produto.atualizado", produtoSnapshotDTO);
+    }
+
+    @Transactional
+    public void adicionarQuantidadeVendida(String idMongo, Integer quantidadeParaAdicionar) {
+        Produto produto = buscarEntidadeProdutoPorId(idMongo);
+
+        var quantidadeAtual = produto.getQuantidadeVendida();
+        produto.setQuantidadeVendida(quantidadeAtual + quantidadeParaAdicionar);
+        produtoRepository.save(produto);
+    }
+
+    @Transactional
+    public void diminuirQuantidadeVendida(String idMongo, Integer quantidadeParaDiminuir) {
+        Produto produto = buscarEntidadeProdutoPorId(idMongo);
+
+        var quantidadeAtual = produto.getQuantidadeVendida();
+        produto.setQuantidadeVendida(quantidadeAtual - quantidadeParaDiminuir);
+        produtoRepository.save(produto);
     }
 
     @Transactional

@@ -40,8 +40,10 @@ public class PedidoListener {
 
             if (baixarEstoque) {
                 produtoService.baixarEstoque(item.produtoIdMongo(), item.quantidade());
+                produtoService.adicionarQuantidadeVendida(item.produtoIdMongo(), item.quantidade());
             } else {
                 produtoService.devolverEstoque(item.produtoIdMongo(), item.quantidade());
+                produtoService.diminuirQuantidadeVendida(item.produtoIdMongo(), item.quantidade());
             }
 
             System.out.println("Estoque do produto " + item.produtoIdMongo() + " atualizado!");

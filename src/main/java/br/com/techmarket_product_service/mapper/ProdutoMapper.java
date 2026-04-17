@@ -25,6 +25,7 @@ public final class ProdutoMapper {
         produto.setEstoque(dto.estoque());
         produto.setStatus(StatusProduto.ATIVO);
         produto.setDataCriacao(LocalDateTime.now());
+        produto.setQuantidadeVendida(0);
 
         return produto;
     }
@@ -55,7 +56,9 @@ public final class ProdutoMapper {
                 produto.getPreco(),
                 produto.getEstoque(),
                 produto.getStatus(),
-                produto.getDataCriacao()
+                produto.getDataCriacao(),
+                produto.getImagemId(),
+                produto.getQuantidadeVendida()
         );
     }
 
