@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.net.URLConnection;
 import java.nio.file.Files;
 
 @Component
@@ -94,11 +95,17 @@ public class DataSeeder implements CommandLineRunner {
 
             try (InputStream inputStream = resource.getInputStream()) {
 
+                String contentType = URLConnection.guessContentTypeFromName(resource.getFilename());
+
+                if (contentType == null) {
+                    contentType = "application/octet-stream";
+                }
+
                 produtoImagemService.salvarImagem(
                         idProduto,
                         inputStream,
                         resource.getFilename(),
-                        Files.probeContentType(resource.getFile().toPath())
+                        contentType
                 );
             }
 
