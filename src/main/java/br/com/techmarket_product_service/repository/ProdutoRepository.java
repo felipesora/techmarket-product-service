@@ -9,9 +9,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProdutoRepository extends MongoRepository<Produto, String> {
     List<Produto> findByCategoria(CategoriaProduto categoria, Sort sort);
+
+    Optional<Produto> findByImagemId(String imagemId);
 
     List<Produto> findByNomeContainingIgnoreCase(String nome, Sort sort);
 

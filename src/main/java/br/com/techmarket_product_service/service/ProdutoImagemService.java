@@ -84,4 +84,26 @@ public class ProdutoImagemService {
             throw new RuntimeException("Erro ao ler imagem", e);
         }
     }
+
+    public void deletarImagem(String imagemId) {
+        try {
+            Query query = Query.query(Criteria.where("_id").is(new ObjectId(imagemId)));
+
+            GridFSFile file = gridFsTemplate.findOne(query);
+
+            if (file == null) {
+                throw new EntityNotFoundException("Imagem não encontrada");
+            }
+
+            gridFsTemplate.delete(query);
+
+            Produto produto = produtoRepository.findByImagemId(imagemId)
+                    .orElseThrow(() -> new EntityNotFoundException("Produto não encontrado para essa imagem"));
+
+            produto.setImagemId(null);
+            produtoRepository.save(produto);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao deletar imagem", e);
+        }
+    }
 }
