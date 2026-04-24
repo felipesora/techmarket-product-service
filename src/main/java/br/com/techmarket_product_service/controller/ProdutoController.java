@@ -131,4 +131,10 @@ public class ProdutoController {
         produtoService.deletarProduto(id);
         return ResponseEntity.noContent().build();
     }
+
+    @DeleteMapping("imagem/{imagemId}")
+    public ResponseEntity<Void> deletarImagem(@PathVariable String imagemId) {
+        produtoImagemService.deletarImagem(imagemId);
+        return ResponseEntity.noContent().build();
+    }
 }
