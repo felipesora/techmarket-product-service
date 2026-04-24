@@ -4,6 +4,7 @@ import br.com.techmarket_product_service.dto.imagem.ImagemResponseDTO;
 import br.com.techmarket_product_service.dto.produto.ProdutoCreateDTO;
 import br.com.techmarket_product_service.dto.produto.ProdutoResponseDTO;
 import br.com.techmarket_product_service.dto.produto.ProdutoUpdateDTO;
+import br.com.techmarket_product_service.model.enums.StatusProduto;
 import br.com.techmarket_product_service.service.ProdutoImagemService;
 import br.com.techmarket_product_service.service.ProdutoService;
 import com.mongodb.client.gridfs.model.GridFSFile;
@@ -41,13 +42,13 @@ public class ProdutoController {
 
     @GetMapping("/mais-vendidos")
     public ResponseEntity<Page<ProdutoResponseDTO>> listarProdutosMaisVendidos(@PageableDefault(size = 10) Pageable paginacao) {
-        Page<ProdutoResponseDTO> produtos = produtoService.obterProdutosMaisVendidos(paginacao);
+        Page<ProdutoResponseDTO> produtos = produtoService.obterProdutosMaisVendidos(StatusProduto.ATIVO, paginacao);
         return ResponseEntity.ok(produtos);
     }
 
     @GetMapping("/promocoes")
     public ResponseEntity<Page<ProdutoResponseDTO>> listarProdutosEmPromocao(@PageableDefault(size = 10) Pageable paginacao) {
-        var produtos = produtoService.obterProdutosEmPromocao(paginacao);
+        var produtos = produtoService.obterProdutosEmPromocao(StatusProduto.ATIVO, paginacao);
         return ResponseEntity.ok(produtos);
     }
 
@@ -72,6 +73,18 @@ public class ProdutoController {
     public ResponseEntity<Long> totalProdutosAtivos() {
         long total = produtoService.contarUsuariosAtivosComuns();
         return ResponseEntity.ok(total);
+    }
+
+    @GetMapping(value = "/admin/mais-vendidos")
+    public ResponseEntity<Page<ProdutoResponseDTO>> listarProdutosMaisVendidosAdmin(@PageableDefault(size = 10) Pageable paginacao) {
+        Page<ProdutoResponseDTO> produtos = produtoService.obterProdutosMaisVendidos(null, paginacao);
+        return ResponseEntity.ok(produtos);
+    }
+
+    @GetMapping("/admin/promocoes")
+    public ResponseEntity<Page<ProdutoResponseDTO>> listarProdutosEmPromocaoAdmin(@PageableDefault(size = 10) Pageable paginacao) {
+        var produtos = produtoService.obterProdutosEmPromocao(null, paginacao);
+        return ResponseEntity.ok(produtos);
     }
 
     @PostMapping("/buscar-por-ids")

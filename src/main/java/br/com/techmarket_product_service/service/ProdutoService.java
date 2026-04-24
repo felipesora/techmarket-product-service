@@ -39,15 +39,28 @@ public class ProdutoService {
                 .map(ProdutoMapper::converterParaResponseDTO);
     }
 
-    public Page<ProdutoResponseDTO> obterProdutosMaisVendidos(Pageable paginacao) {
+    public Page<ProdutoResponseDTO> obterProdutosMaisVendidos(StatusProduto ativo, Pageable paginacao) {
+        if (ativo == null) {
+            return produtoRepository
+                    .findAllByOrderByQuantidadeVendidaDesc(paginacao)
+                    .map(ProdutoMapper::converterParaResponseDTO);
+        }
+
         return produtoRepository
-                .findByStatusOrderByQuantidadeVendidaDesc(StatusProduto.ATIVO, paginacao)
+                .findByStatusOrderByQuantidadeVendidaDesc(ativo, paginacao)
                 .map(ProdutoMapper::converterParaResponseDTO);
     }
 
-    public Page<ProdutoResponseDTO> obterProdutosEmPromocao(Pageable paginacao) {
+    public Page<ProdutoResponseDTO> obterProdutosEmPromocao(StatusProduto ativo, Pageable paginacao) {
+        if (ativo == null) {
+
+            return produtoRepository
+                    .findByPrecoPromocionalNotNullOrderByQuantidadeVendidaDesc(paginacao)
+                    .map(ProdutoMapper::converterParaResponseDTO);
+        }
+
         return produtoRepository
-                .findByPrecoPromocionalNotNullOrderByQuantidadeVendidaDesc(StatusProduto.ATIVO, paginacao)
+                .findByPrecoPromocionalNotNullAndStatusOrderByQuantidadeVendidaDesc(ativo, paginacao)
                 .map(ProdutoMapper::converterParaResponseDTO);
     }
 
