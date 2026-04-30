@@ -58,4 +58,18 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.PAYLOAD_TOO_LARGE)
                 .body(response);
     }
+
+    @ExceptionHandler(PrecoInvalidoException.class)
+    public ResponseEntity<ErrorResponse> handlePrecoInvalido(PrecoInvalidoException ex) {
+
+        ErrorResponse response = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                ex.getMessage(),
+                null
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(response);
+    }
 }

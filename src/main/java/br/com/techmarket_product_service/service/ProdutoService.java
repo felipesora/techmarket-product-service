@@ -5,6 +5,7 @@ import br.com.techmarket_product_service.dto.produto.ProdutoResponseDTO;
 import br.com.techmarket_product_service.dto.produto.ProdutoUpdateDTO;
 import br.com.techmarket_product_service.dto.produtoSnapshot.ProdutoSnapshotDTO;
 import br.com.techmarket_product_service.exception.EntityNotFoundException;
+import br.com.techmarket_product_service.exception.PrecoInvalidoException;
 import br.com.techmarket_product_service.exception.RegraNegocioException;
 import br.com.techmarket_product_service.mapper.ProdutoMapper;
 import br.com.techmarket_product_service.model.Produto;
@@ -18,6 +19,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -117,6 +119,8 @@ public class ProdutoService {
 
     @Transactional
     public ProdutoResponseDTO cadastrarProduto(ProdutoCreateDTO dto) {
+        validarPrecos(dto.precoUnitario(), dto.precoPromocional());
+
         Produto produto = ProdutoMapper.converterCreateDTOParaEntity(dto);
         produtoRepository.save(produto);
 
@@ -129,6 +133,8 @@ public class ProdutoService {
 
     @Transactional
     public ProdutoResponseDTO atualizarProduto(String id, ProdutoUpdateDTO dto) {
+        validarPrecos(dto.precoUnitario(), dto.precoPromocional());
+
         Produto produto = buscarEntidadeProdutoPorId(id);
         ProdutoMapper.converterUpdateDTOParaEntity(dto, produto);
         produtoRepository.save(produto);
@@ -209,5 +215,13 @@ public class ProdutoService {
     private Produto buscarEntidadeProdutoPorId(String id) {
         return produtoRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Produto com id: " + id + " não encontrado"));
+    }
+
+    private void validarPrecos(BigDecimal precoUnitario, BigDecimal precoPromocional) {
+        if (precoPromocional == null) return;
+
+        if (precoPromocional.compareTo(precoUnitario) >= 0) {
+            throw new PrecoInvalidoException("O preço promocional deve ser menor que o preço original");
+        }
     }
 }
