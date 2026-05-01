@@ -5,19 +5,17 @@ import br.com.techmarket_product_service.model.enums.CategoriaProduto;
 import br.com.techmarket_product_service.repository.ProdutoRepository;
 import br.com.techmarket_product_service.service.ProdutoImagemService;
 import br.com.techmarket_product_service.service.ProdutoService;
-import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.ApplicationListener;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.net.URLConnection;
-import java.nio.file.Files;
 
 @Component
-public class DataSeeder implements CommandLineRunner {
+public class DataSeeder implements ApplicationListener<ApplicationReadyEvent> {
 
     private final ProdutoRepository repository;
     private final ProdutoService produtoService;
@@ -30,8 +28,17 @@ public class DataSeeder implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) throws Exception {
-        seedProdutos();
+    public void onApplicationEvent(ApplicationReadyEvent event) {
+        System.out.println("Aguardando 5 segundos antes de iniciar o seed...");
+
+        new Thread(() -> {
+            try {
+                Thread.sleep(5000);
+                seedProdutos();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }).start();
     }
 
     private void seedProdutos() {
